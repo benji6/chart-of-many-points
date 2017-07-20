@@ -6,7 +6,7 @@ import vert from './vert.glsl'
 const regl = Regl()
 
 const duration = 2e3
-const pointsToPixelsRatio = 0.05
+const pointsToPixelsRatio = 5e-2
 const pointWidth = 1.5
 
 const width = window.innerWidth
@@ -15,13 +15,7 @@ const height = window.innerHeight
 const numPixels = width * height
 const numPoints = Math.round(numPixels * pointsToPixelsRatio)
 
-const points = [[], []]
-
-for (let i = 0; i < numPoints; i++) {
-  for (let j = 0; j < layouts.length; j++) {
-    points[j].push(layouts[j](i))
-  }
-}
+const points = [layouts[0](numPoints), layouts[1](numPoints)]
 
 const makeDrawPoints = points => regl({
   attributes: {
@@ -69,7 +63,7 @@ regl.frame(({time}) => {
     startTime = null
     newLayoutIndex = newLayoutIndex === layouts.length - 1 ? 0 : newLayoutIndex + 1
     points.shift()
-    points.push(Array.from({length: numPoints}, (_, i) => layouts[newLayoutIndex](i)))
+    points.push(layouts[newLayoutIndex](numPoints))
     drawPoints = makeDrawPoints(points)
   }
 })
