@@ -39,7 +39,7 @@ const makeDrawPoints = points => regl({
 
 let drawPoints = makeDrawPoints(points)
 let startTime = null
-let newLayoutIndex = layouts.length - 2
+let newLayoutIndex = 1
 
 regl.frame(({time}) => {
   if (startTime === null) {
