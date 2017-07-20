@@ -1,10 +1,11 @@
+import {shuffle} from 'd3-array'
 import {randomNormal} from 'd3-random'
 
 const rng = randomNormal(0, 0.15)
 
-const phyllotaxisLayout = (length, pointWidth) => {
+const phyllotaxisLayout = length => {
+  const pointWidth = 1 / Math.sqrt(length)
   const theta = Math.PI * (3 - Math.sqrt(5))
-
   const pointRadius = pointWidth / 2
 
   return Array.from({length}, (_, i) => {
@@ -14,10 +15,21 @@ const phyllotaxisLayout = (length, pointWidth) => {
 
     return {
       color: [Math.random() * 0.6 + 0.4, 0.5 + Math.random() * 0.5, Math.random() * 0.1],
-      x: 0.5 + (phylloX - pointRadius) * 1.75,
-      y: 0.5 + (phylloY - pointRadius) * 1.75,
+      x: 0.5 + (phylloX - pointRadius),
+      y: 0.5 + (phylloY - pointRadius),
     }
   })
+}
+
+const gridLayout = length => {
+  const pointWidth = 1 / Math.sqrt(length)
+  const pointsPerRow = Math.floor(1 / pointWidth)
+
+  return shuffle(Array.from({length}, (_, i) => ({
+    color: [Math.random() * 0.1, Math.random() * 0.6 + 0.4, Math.random() * 0.1 + 0.9],
+    x: pointWidth * (i % pointsPerRow),
+    y: pointWidth * Math.floor(i / pointsPerRow),
+  })))
 }
 
 const greenCircle = length => Array.from({length}, (_, i) => ({
@@ -32,4 +44,4 @@ const pinkBlob = length => Array.from({length}, () => ({
   y: rng() + 0.5,
 }))
 
-export default [pinkBlob, greenCircle, phyllotaxisLayout]
+export default [gridLayout, pinkBlob, greenCircle, phyllotaxisLayout]

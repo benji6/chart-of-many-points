@@ -8,16 +8,14 @@ const regl = Regl()
 const duration = 3e3
 const pointsToPixelsRatio = 7e-2
 const pointWidth = 1.25
-const pointMarginRatio = 0.2
 
 const width = window.innerWidth
 const height = window.innerHeight
 
 const numPixels = width * height
 const numPoints = Math.round(numPixels * pointsToPixelsRatio)
-const pointMargin = pointWidth * pointMarginRatio
 
-const points = [layouts[0](numPoints), layouts[1](numPoints, (pointWidth + pointMargin) / Math.min(width, height))]
+const points = layouts.slice(0, 2).map(layout => layout(numPoints))
 
 const makeDrawPoints = points => regl({
   attributes: {
@@ -65,7 +63,7 @@ regl.frame(({time}) => {
     startTime = null
     newLayoutIndex = newLayoutIndex === layouts.length - 1 ? 0 : newLayoutIndex + 1
     points.shift()
-    points.push(layouts[newLayoutIndex](numPoints, (pointWidth + pointMargin) / Math.min(width, height)))
+    points.push(layouts[newLayoutIndex](numPoints))
     drawPoints = makeDrawPoints(points)
   }
 })
