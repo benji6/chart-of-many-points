@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {randomNormal} from 'd3-random'
 
 const rng = randomNormal(0, 0.15)
@@ -14,7 +13,7 @@ const phyllotaxisLayout = (length, pointWidth) => {
     const phylloY = pointRadius * Math.sqrt(index) * Math.sin(index * theta)
 
     return {
-      color: [Math.random() * 0.6 + 0.4, Math.random() * 0.1, 0.5 + Math.random() * 0.5],
+      color: [Math.random() * 0.6 + 0.4, 0.5 + Math.random() * 0.5, Math.random() * 0.1],
       x: 0.5 + (phylloX - pointRadius) * 1.75,
       y: 0.5 + (phylloY - pointRadius) * 1.75,
     }
@@ -33,4 +32,4 @@ const pinkBlob = length => Array.from({length}, () => ({
   y: rng() + 0.5,
 }))
 
-export default [greenCircle, phyllotaxisLayout]
+export default [pinkBlob, greenCircle, phyllotaxisLayout]
