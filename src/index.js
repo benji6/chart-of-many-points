@@ -1,32 +1,41 @@
-import {randomNormal} from 'd3-random'
 import Regl from 'regl'
 import frag from './frag.glsl'
+import layouts from './layouts'
 import vert from './vert.glsl'
 
 const regl = Regl()
 
-const numPoints = 1e3
+const duration = 2e3
+const pointsToPixelsRatio = 0.05
+const pointWidth = 1.5
 
 const width = window.innerWidth
 const height = window.innerHeight
 
-const rng = randomNormal(0, 0.15)
+const numPixels = width * height
+const numPoints = Math.round(numPixels * pointsToPixelsRatio)
 
-const points = Array.from({length: numPoints}, () => ({
-  color: [0, Math.random(), 0],
-  x: rng() * width + width / 2,
-  y: rng() * height + height / 2,
-}))
+const points = [[], []]
 
-const drawPoints = regl({
+for (let i = 0; i < numPoints; i++) {
+  for (let j = 0; j < layouts.length; j++) {
+    points[j].push(layouts[j](i))
+  }
+}
+
+const makeDrawPoints = points => regl({
   attributes: {
-    color: points.map(d => d.color),
-    position: points.map(d => [d.x, d.y]),
+    colorEnd: points[1].map(d => d.color),
+    colorStart: points[0].map(d => d.color),
+    positionEnd: points[1].map(d => [d.x * width, d.y * height]),
+    positionStart: points[0].map(d => [d.x * width, d.y * height]),
   },
-  count: points.length,
+  count: numPoints,
   frag,
   primitive: 'points',
   uniforms: {
+    duration: regl.prop('duration'),
+    elapsed: ({time}, {startTime = 0}) => (time - startTime) * 1000,
     pointWidth: regl.prop('pointWidth'),
     stageHeight: regl.prop('stageHeight'),
     stageWidth: regl.prop('stageWidth'),
@@ -34,15 +43,33 @@ const drawPoints = regl({
   vert,
 })
 
-regl.frame(() => {
+let drawPoints = makeDrawPoints(points)
+let startTime = null
+let newLayoutIndex = -1
+
+regl.frame(({time}) => {
+  if (startTime === null) {
+    startTime = time
+  }
+
   regl.clear({
     color: [0, 0, 0, 1],
     depth: 1,
   })
 
   drawPoints({
-    pointWidth: 4,
+    duration,
+    pointWidth,
     stageHeight: height,
     stageWidth: width,
+    startTime,
   })
+
+  if (time - startTime > duration / 1000) {
+    startTime = null
+    newLayoutIndex = newLayoutIndex === layouts.length - 1 ? 0 : newLayoutIndex + 1
+    points.shift()
+    points.push(Array.from({length: numPoints}, (_, i) => layouts[newLayoutIndex](i)))
+    drawPoints = makeDrawPoints(points)
+  }
 })
