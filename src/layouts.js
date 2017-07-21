@@ -39,6 +39,22 @@ const trigonometricLayout = fn => length => {
   }))
 }
 
+const columnChartLayout = length => {
+  const columnChartData = Array.from({length: 4 + Math.floor(random() * 128)}, () => random())
+  const dataLength = columnChartData.length
+  const barWidth = 1 / dataLength
+  const colorFn = colors[Math.floor(random() * 3)]
+  const totalYs = columnChartData.reduce((a, b) => a + b, 0)
+
+  return columnChartData.map((y, i) => {
+    return Array.from({length: Math.ceil(length * y / totalYs)}, () => ({
+      color: colorFn(dataLength, i),
+      x: barWidth * (i + random()),
+      y: 1 - y * random(),
+    }))
+  }).reduce((xs, ys) => [...xs, ...ys], [])
+}
+
 const phyllotaxisLayout = length => {
   const pointWidth = 1 / Math.sqrt(length)
   const theta = Math.PI * (3 - Math.sqrt(5))
@@ -99,11 +115,16 @@ const spiralLayout = length => {
 }
 
 export default [
+  columnChartLayout,
+  columnChartLayout,
+  columnChartLayout,
   randomLayout,
+  columnChartLayout,
   phyllotaxisLayout,
   sinLayout,
   spiralLayout,
   tanLayout,
   gridLayout,
+  columnChartLayout,
   cosLayout,
 ]
