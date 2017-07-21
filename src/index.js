@@ -1,4 +1,5 @@
 import Regl from 'regl'
+import screenfull from 'screenfull'
 import frag from './frag.glsl'
 import layouts from './layouts'
 import vert from './vert.glsl'
@@ -67,3 +68,5 @@ regl.frame(({time}) => {
     drawPoints = makeDrawPoints(points)
   }
 })
+
+document.body.onclick = () => screenfull.enabled && screenfull.request()
