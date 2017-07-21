@@ -1,4 +1,3 @@
-import {shuffle} from 'd3-array'
 import {randomNormal} from 'd3-random'
 import {scaleLinear} from 'd3-scale'
 
@@ -42,11 +41,11 @@ const gridLayout = length => {
   const pointWidth = 1 / Math.sqrt(length) * 1.5
   const pointsPerRow = Math.floor(1 / pointWidth)
 
-  return shuffle(Array.from({length}, (_, i) => ({
+  return Array.from({length}, (_, i) => ({
     color: [random() * 0.1, random() * 0.6 + 0.4, random() * 0.1 + 0.9],
     x: pointWidth * (i % pointsPerRow),
     y: pointWidth * Math.floor(i / pointsPerRow),
-  })))
+  }))
 }
 
 const ringLayout = length => Array.from({length}, (_, i) => ({
@@ -70,7 +69,7 @@ export default [
   phyllotaxisLayout,
   sinLayout,
   tanLayout,
+  gridLayout,
   cosLayout,
   ringLayout,
-  gridLayout,
 ]
