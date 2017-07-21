@@ -6,9 +6,9 @@ import vert from './vert.glsl'
 
 const regl = Regl()
 
-const duration = 3e3
-const pointsToPixelsRatio = 1e-2
-const pointWidth = 6.7
+const duration = 2e3
+const pointsToPixelsRatio = 5e-2
+const pointWidth = 3
 
 const width = window.innerWidth
 const height = window.innerHeight
