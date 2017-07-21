@@ -38,10 +38,10 @@ const ring = length => Array.from({length}, (_, i) => ({
   y: (rng() + Math.sin(i)) / 3 + 0.5,
 }))
 
-const blob = length => Array.from({length}, () => ({
+const random = length => Array.from({length}, () => ({
   color: [Math.random() * 0.6 + 0.4, Math.random() * 0.1, 0.5 + Math.random() * 0.5],
-  x: rng() + 0.5,
-  y: rng() + 0.5,
+  x: Math.random(),
+  y: Math.random(),
 }))
 
-export default [gridLayout, blob, ring, phyllotaxisLayout]
+export default [gridLayout, random, ring, phyllotaxisLayout]
