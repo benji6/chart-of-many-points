@@ -1,13 +1,11 @@
 import {randomNormal} from 'd3-random'
 import {scaleLinear} from 'd3-scale'
 
-const rng = randomNormal(0, 0.15)
-
 const {random} = Math
 
 const trigonometricLayout = (fn, color) => length => {
   const amplitude = 0.25
-  const periods = 2
+  const periods = 3
   const yScale = scaleLinear()
     .domain([0, length - 1])
     .range([0, periods * 2 * Math.PI])
@@ -48,11 +46,14 @@ const gridLayout = length => {
   }))
 }
 
-const ringLayout = length => Array.from({length}, (_, i) => ({
-  color: [random() * 0.1, random() * 0.6 + 0.4, random() * 0.1],
-  x: (rng() + Math.cos(i)) / 3 + 0.5,
-  y: (rng() + Math.sin(i)) / 3 + 0.5,
-}))
+const ringLayout = length => {
+  const rng = randomNormal(0, 0.1)
+  return Array.from({length}, (_, i) => ({
+    color: [random() * 0.4, random() * 0.4 + 0.6, random() * 0.4],
+    x: (rng() + Math.cos(i)) / 3 + 0.5,
+    y: (rng() + Math.sin(i)) / 3 + 0.5,
+  }))
+}
 
 const cosLayout = trigonometricLayout(Math.cos, [0, 0, 0.9 + random() * 0.1])
 const sinLayout = trigonometricLayout(Math.sin, [0.9 + random() * 0.1, 0, 0])
@@ -64,10 +65,29 @@ const randomLayout = length => Array.from({length}, () => ({
   y: random(),
 }))
 
+const spiralLayout = length => {
+  const periods = 11
+
+  const rScale = scaleLinear()
+    .domain([0, length - 1])
+    .range([0, Math.min(0.5, 0.5)])
+
+  const thetaScale = scaleLinear()
+    .domain([0, length - 1])
+    .range([0, periods * 2 * Math.PI])
+
+  return Array.from({length}, (_, i) => ({
+    color: [1, 1, 1],
+    x: rScale(i) * Math.cos(thetaScale(i)) + 0.5,
+    y: rScale(i) * Math.sin(thetaScale(i)) + 0.5,
+  }))
+}
+
 export default [
   randomLayout,
   phyllotaxisLayout,
   sinLayout,
+  spiralLayout,
   tanLayout,
   gridLayout,
   cosLayout,
