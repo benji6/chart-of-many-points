@@ -46,13 +46,11 @@ const columnChartLayout = length => {
   const colorFn = colors[Math.floor(random() * 3)]
   const totalYs = columnChartData.reduce((a, b) => a + b, 0)
 
-  return columnChartData.map((y, i) => {
-    return Array.from({length: Math.ceil(length * y / totalYs)}, () => ({
-      color: colorFn(dataLength, i),
-      x: barWidth * (i + random()),
-      y: 1 - y * random(),
-    }))
-  }).reduce((xs, ys) => [...xs, ...ys], [])
+  return columnChartData.map((y, i) => Array.from({length: Math.ceil(length * y / totalYs)}, () => ({
+    color: colorFn(dataLength, i),
+    x: barWidth * (i + random()),
+    y: 1 - y * random(),
+  }))).reduce((xs, ys) => [...xs, ...ys], [])
 }
 
 const phyllotaxisLayout = length => {
