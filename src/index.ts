@@ -2,11 +2,10 @@ import Regl from "regl";
 import * as screenfull from "screenfull";
 import layouts from "./layouts";
 import { Point } from "./types";
+import { regl } from "./globals";
 declare let require: any;
 const frag = require("./frag.glsl");
 const vert = require("./vert.glsl");
-
-const regl = Regl();
 
 const duration = 2e3;
 const pointsToPixelsRatio = 6e-2;
