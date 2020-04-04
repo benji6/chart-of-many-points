@@ -16,7 +16,7 @@ export default function columnChartLayout(length: number): Point[] {
       Array.from({ length: Math.ceil((length * y) / totalYs) }, () => ({
         color: colorFn(dataLength, i),
         x: barWidth * (i + Math.random()),
-        y: 1 - y * Math.random(),
+        y: y * Math.random(),
       }))
     )
     .reduce((xs, ys) => [...xs, ...ys], []);

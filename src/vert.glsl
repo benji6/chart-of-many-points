@@ -1,9 +1,9 @@
+varying vec3 fragColor;
+
 attribute vec2 positionEnd;
 attribute vec2 positionStart;
 attribute vec3 colorEnd;
 attribute vec3 colorStart;
-
-varying vec3 fragColor;
 
 uniform float duration;
 uniform float elapsed;
@@ -21,7 +21,7 @@ float easeCubicInOut(float t) {
 vec2 normalizeCoords(vec2 position) {
   return vec2(
     2. * (position.x / stageWidth - .5),
-    -(2. * (position.y / stageHeight - .5))
+    2. * (position.y / stageHeight - .5)
   );
 }
 
