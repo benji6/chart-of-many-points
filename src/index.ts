@@ -1,4 +1,4 @@
-import * as Regl from "regl";
+import Regl from "regl";
 import * as screenfull from "screenfull";
 import layouts from "./layouts";
 import { Point } from "./types";
