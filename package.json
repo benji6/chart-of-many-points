@@ -6,8 +6,9 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
+    "format": "prettier --write '**/*'",
     "start": "webpack-dev-server --open",
-    "test": "echo no tests"
+    "test": "prettier --check '**/*'"
   },
   "author": "Ben Hall",
   "dependencies": {
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "copy-webpack-plugin": "^4.0.1",
+    "prettier": "^2.0.2",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1",
     "webpack-glsl-loader": "^1.0.1"
