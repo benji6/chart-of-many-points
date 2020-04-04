@@ -1,11 +1,10 @@
 import { rgb } from "d3-color";
+import { scaleLinear, scaleSequential } from "d3-scale";
 import {
   interpolateCool,
   interpolateInferno,
   interpolateViridis,
-  scaleLinear,
-  scaleSequential,
-} from "d3-scale";
+} from "d3-scale-chromatic";
 
 const { random } = Math;
 
