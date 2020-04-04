@@ -1,8 +1,10 @@
-import Regl from "regl";
-import screenfull from "screenfull";
-import frag from "./frag.glsl";
+import * as Regl from "regl";
+import * as screenfull from "screenfull";
 import layouts from "./layouts";
-import vert from "./vert.glsl";
+import { Point } from "./types";
+declare let require: any;
+const frag = require("./frag.glsl");
+const vert = require("./vert.glsl");
 
 const regl = Regl();
 
@@ -16,10 +18,31 @@ const height = window.innerHeight;
 const numPixels = width * height;
 const numPoints = Math.round(numPixels * pointsToPixelsRatio);
 
-const points = layouts.slice(0, 2).map((layout) => layout(numPoints));
+const points: Point[][] = layouts
+  .slice(0, 2)
+  .map((layout) => layout(numPoints));
 
-const makeDrawPoints = (points) =>
-  regl({
+interface Attributes {
+  colorEnd: Regl.Vec3[];
+  colorStart: Regl.Vec3[];
+  positionEnd: Regl.Vec2[];
+  positionStart: Regl.Vec2[];
+}
+
+interface Uniforms {
+  duration: Regl.Uniform;
+  elapsed: Regl.Uniform;
+  pointWidth: Regl.Uniform;
+  stageHeight: Regl.Uniform;
+  stageWidth: Regl.Uniform;
+}
+
+interface Props extends Uniforms {
+  startTime: number;
+}
+
+const makeDrawPoints = (points: Point[][]) =>
+  regl<Uniforms, Attributes, Props>({
     attributes: {
       colorEnd: points[1].map((d) => d.color),
       colorStart: points[0].map((d) => d.color),
@@ -30,23 +53,21 @@ const makeDrawPoints = (points) =>
     frag,
     primitive: "points",
     uniforms: {
-      duration: regl.prop("duration"),
+      duration: regl.prop<Uniforms, "duration">("duration"),
       elapsed: ({ time }, { startTime = 0 }) => (time - startTime) * 1000,
-      pointWidth: regl.prop("pointWidth"),
-      stageHeight: regl.prop("stageHeight"),
-      stageWidth: regl.prop("stageWidth"),
+      pointWidth: regl.prop<Uniforms, "pointWidth">("pointWidth"),
+      stageHeight: regl.prop<Uniforms, "stageHeight">("stageHeight"),
+      stageWidth: regl.prop<Uniforms, "stageWidth">("stageWidth"),
     },
     vert,
   });
 
 let drawPoints = makeDrawPoints(points);
-let startTime = null;
+let startTime: number | undefined;
 let newLayoutIndex = 1;
 
 regl.frame(({ time }) => {
-  if (startTime === null) {
-    startTime = time;
-  }
+  if (startTime === undefined) startTime = time;
 
   regl.clear({
     color: [0, 0, 0, 1],
@@ -62,7 +83,7 @@ regl.frame(({ time }) => {
   });
 
   if (time - startTime > duration / 1000) {
-    startTime = null;
+    startTime = undefined;
     newLayoutIndex =
       newLayoutIndex === layouts.length - 1 ? 0 : newLayoutIndex + 1;
     points.shift();

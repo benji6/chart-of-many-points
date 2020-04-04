@@ -5,25 +5,30 @@ import {
   interpolateInferno,
   interpolateViridis,
 } from "d3-scale-chromatic";
+import { Point } from "./types";
 
 const { random } = Math;
 
+type Color = [number, number, number];
+
 const colors = [interpolateViridis, interpolateInferno, interpolateCool]
-  .map((f) => (length, i) => {
+  .map((f) => (length: number, i: number): Color => {
     const { r, g, b } = rgb(scaleSequential(f).domain([length - 1, 0])(i));
-    return [r, g, b].map((x) => x / 255);
+    return [r, g, b].map((x) => x / 255) as Color;
   })
   .concat(
     [
-      [1, 0, 0],
-      [0, 1, 0],
-      [0, 0, 1],
+      [1, 0, 0] as Color,
+      [0, 1, 0] as Color,
+      [0, 0, 1] as Color,
     ].map((color) => () => color)
   );
 
 const randomColorFn = () => colors[Math.floor(random() * colors.length)];
 
-const trigonometricLayout = (fn) => (length) => {
+const trigonometricLayout = (fn: (x: number) => number) => (
+  length: number
+): Point[] => {
   const amplitude = 0.25;
   const periods = 3;
   const yScale = scaleLinear()
@@ -38,14 +43,14 @@ const trigonometricLayout = (fn) => (length) => {
   }));
 };
 
-const columnChartLayout = (length) => {
+const columnChartLayout = (length: number): Point[] => {
   const columnChartData = Array.from(
     { length: 4 + Math.floor(random() * 128) },
     () => random()
   );
   const dataLength = columnChartData.length;
   const barWidth = 1 / dataLength;
-  const colorFn = colors[Math.floor(random() * 3)];
+  const colorFn = randomColorFn();
   const totalYs = columnChartData.reduce((a, b) => a + b, 0);
 
   return columnChartData
@@ -59,7 +64,7 @@ const columnChartLayout = (length) => {
     .reduce((xs, ys) => [...xs, ...ys], []);
 };
 
-const phyllotaxisLayout = (length) => {
+const phyllotaxisLayout = (length: number): Point[] => {
   const pointWidth = 1 / Math.sqrt(length);
   const theta = Math.PI * (3 - Math.sqrt(5));
   const pointRadius = pointWidth / 2;
@@ -76,7 +81,7 @@ const phyllotaxisLayout = (length) => {
   });
 };
 
-const gridLayout = (length) => {
+const gridLayout = (length: number): Point[] => {
   const pointWidth = (1 / Math.sqrt(length)) * 1.5;
   const pointsPerRow = Math.floor(1 / pointWidth);
 
@@ -87,11 +92,11 @@ const gridLayout = (length) => {
   }));
 };
 
-const cosLayout = trigonometricLayout(Math.cos, [0, 0, 0.9 + random() * 0.1]);
-const sinLayout = trigonometricLayout(Math.sin, [0.9 + random() * 0.1, 0, 0]);
-const tanLayout = trigonometricLayout(Math.tan, [0, 0.9 + random() * 0.1, 0]);
+const cosLayout = trigonometricLayout(Math.cos);
+const sinLayout = trigonometricLayout(Math.sin);
+const tanLayout = trigonometricLayout(Math.tan);
 
-const randomLayout = (length) => {
+const randomLayout = (length: number): Point[] => {
   const colorFn = randomColorFn();
   return Array.from({ length }, (_, i) => ({
     color: colorFn(length, i),
@@ -100,7 +105,7 @@ const randomLayout = (length) => {
   }));
 };
 
-const spiralLayout = (length) => {
+const spiralLayout = (length: number): Point[] => {
   const periods = 11;
 
   const rScale = scaleLinear()
