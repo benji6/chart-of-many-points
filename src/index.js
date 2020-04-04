@@ -71,4 +71,4 @@ regl.frame(({ time }) => {
   }
 });
 
-document.body.onclick = () => screenfull.enabled && screenfull.request();
+document.body.onclick = () => screenfull.isEnabled && screenfull.request();
