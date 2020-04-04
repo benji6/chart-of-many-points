@@ -5,9 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "parcel build src/index.html",
     "format": "prettier --write '**/*'",
-    "start": "webpack-dev-server --open",
+    "start": "parcel src/index.html",
     "test": "prettier --check '**/*'"
   },
   "author": "Ben Hall",
@@ -18,10 +18,9 @@
     "screenfull": "^3.3.1"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^4.0.1",
-    "prettier": "^2.0.2",
-    "webpack": "^3.3.0",
-    "webpack-dev-server": "^2.5.1",
-    "webpack-glsl-loader": "^1.0.1"
+    "glslify-bundle": "^5.1.1",
+    "glslify-deps": "^1.3.1",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.2"
   }
 }
