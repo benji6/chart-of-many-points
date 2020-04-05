@@ -1,7 +1,7 @@
 import * as screenfull from "screenfull";
 import layouts from "./layouts";
 import { Point } from "./types";
-import { regl } from "./globals";
+import { regl, state } from "./globals";
 import {
   DISPLAY_DURATION,
   HEIGHT,
@@ -10,12 +10,20 @@ import {
   WIDTH,
 } from "./constants";
 import makeDrawPoints from "./makeDrawPoints";
+import lineChart from "./layouts/lineChart";
 
-const points: Point[][] = layouts
+const demoPoints: Point[][] = layouts
   .slice(0, 2)
   .map((layout) => layout(TOTAL_POINTS));
 
-let drawPoints = makeDrawPoints(points);
+const interactivePoints: Point[][] = [
+  state.chartParams0,
+  state.chartParams1,
+].map((params) => lineChart(params)(TOTAL_POINTS));
+
+let drawPoints = state.isDemoMode
+  ? makeDrawPoints(demoPoints)
+  : makeDrawPoints(interactivePoints);
 let startTime: number | undefined;
 let newLayoutIndex = 1;
 
@@ -32,13 +40,15 @@ regl.frame(({ time }) => {
     startTime,
   });
 
+  if (!state.isDemoMode) return;
+
   if (time - startTime > DISPLAY_DURATION / 1000) {
     startTime = undefined;
     newLayoutIndex =
       newLayoutIndex === layouts.length - 1 ? 0 : newLayoutIndex + 1;
-    points.shift();
-    points.push(layouts[newLayoutIndex](TOTAL_POINTS));
-    drawPoints = makeDrawPoints(points);
+    demoPoints.shift();
+    demoPoints.push(layouts[newLayoutIndex](TOTAL_POINTS));
+    drawPoints = makeDrawPoints(demoPoints);
   }
 });
 

@@ -2,15 +2,17 @@ import { Point } from "../types";
 import { TOTAL_POINTS } from "../constants";
 import { randomColorFn } from "./_utils";
 
+export interface LineChartParams {
+  domain: [number, number];
+  f(x: number): number;
+  range: [number, number];
+}
+
 export default ({
   domain: [minX, maxX],
   f,
   range: [minY, maxY],
-}: {
-  domain: readonly [number, number];
-  f: (x: number) => number;
-  range: readonly [number, number];
-}) =>
+}: LineChartParams) =>
   function lineChart(length: number): Point[] {
     const xLength = maxX - minX;
     const yLength = maxY - minY;
