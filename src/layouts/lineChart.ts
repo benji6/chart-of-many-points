@@ -19,11 +19,11 @@ export default ({
 
     return Array.from({ length }, (_, i) => {
       const x = minX + deltaX * i;
-      const y = f(x) - minY;
+      const y = f(x);
       return {
         color: colorFn(length, i),
-        x: x / xLength,
-        y: y / yLength,
+        x: (x - minX) / xLength,
+        y: (y - minY) / yLength,
       };
     });
   };
